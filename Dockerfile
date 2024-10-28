@@ -1,26 +1,19 @@
-# Use an official base image (modify as needed)
-FROM alpine:latest
+# Use a base image that has Docker installed
+FROM docker:20.10.7
 
-# Install required packages
-RUN apk add --no-cache bash docker
-
-# Create a non-root user and group
-RUN addgroup -S benchuser && adduser -S benchuser -G benchuser
-
-# Set the working directory
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy the docker-bench-security.sh script into the image
-COPY scripts/docker-bench-security.sh .
-# Copy the functions directory into the image
-COPY scripts/functions ./functions
+# Copy the functions and scripts directories into the container
+COPY scripts/functions/ /app/functions/
+COPY scripts/docker-bench-security.sh /app/scripts/docker-bench-security.sh
 
-# Give execute permission to the script
-RUN chmod +x docker-bench-security.sh
+# Make the docker-bench-security.sh script executable
+RUN chmod +x /app/scripts/docker-bench-security.sh
 
-# Switch to the non-root user
-USER benchuser
+# Verify that the files have been copied correctly (for debugging)
+RUN echo "Listing /app:" && ls -l /app && echo "Listing /app/scripts:" && ls -l /app/scripts
 
-# Command to run the script
-CMD ["./docker-bench-security.sh"]
+# Set the entrypoint to run the docker-bench-security script
+ENTRYPOINT ["/app/scripts/docker-bench-security.sh"]
 
