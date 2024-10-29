@@ -14,7 +14,7 @@ pipeline {
                 script {
                     // Run Docker Bench for Security using the updated Docker command
                     sh '''
-                        sudo docker run --privileged -v /var/run/docker.sock:/var/run/docker.sock \
+                        echo "" | sudo -S docker run --privileged -v /var/run/docker.sock:/var/run/docker.sock \
                         -v /etc:/etc -d docker/docker-bench-security
                     '''
                 }
