@@ -12,13 +12,10 @@ pipeline {
         stage('Run Docker Bench for Security') {
             steps {
                 script {
-                    // Run Docker Bench for Security using Docker
+                    // Run Docker Bench for Security using the updated Docker command
                     sh '''
-                        docker run --privileged --rm --net host \
-                        -v /var/run/docker.sock:/var/run/docker.sock \
-                        -v /etc:/etc \
-                        -v /usr/bin/docker:/usr/bin/docker \
-                        docker/docker-bench-security
+                        sudo docker run --privileged -v /var/run/docker.sock:/var/run/docker.sock \
+                        -v /etc:/etc -d docker/docker-bench-security
                     '''
                 }
             }
@@ -32,4 +29,3 @@ pipeline {
         }
     }
 }
-
